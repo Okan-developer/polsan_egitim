@@ -34,3 +34,5 @@ step 7). Nothing lands here without that decision; noise is rejected in the tria
   — Recommendation: "kim neyi onaylar" İK kararıyla ayrı spec; CSRF ile birlikte — Deferred by: bootstrap görüşmesi, 2026-11-02, spec gerektirir
 - **B-10** — HTML escape yok (XSS), hatalar yutuluyor, form girdisi doğrulanmıyor, personel bulunamazsa `true` — Source: bootstrap 2026-11-02 (src/Main.java) — Severity: High
   — Recommendation: karakterizasyon testlerinden sonra `/fix-bug` turları — Deferred by: bootstrap görüşmesi, 2026-11-02, önce test altyapısı
+- **B-11** — Bitişi başlangıçtan önce olan talep negatif gün sayısıyla kabul ediliyor (domain invariant ihlali) — Source: spec 0001, self-critique (src/Main.java `/new`, `createRequest`) — Severity: High
+  — Recommendation: `/fix-bug` (karakterizasyon testi 0001'de sabitlenir) — Deferred by: spec 0001 öz-eleştirisi, 2026-11-02, bu işte hiçbir hata düzeltilmez

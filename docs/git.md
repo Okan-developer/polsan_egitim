@@ -36,11 +36,13 @@
 - Always: one narrow commit, `scripts/check` green. A second file or a new test means re-triage.
 
 ## Remote & push
-- **Remote yok; push kesinlikle yapılmaz.** Her zaman yerelde çalışılır (bootstrap 2026-11-02 kararı).
-  Agent `git push` çalıştırmaz, remote eklemez.
+- **Remote:** `origin` = `https://github.com/Okan-developer/polsan_egitim.git` (2026-11-08 kararı;
+  2026-11-02'deki "remote yok" kararının yerini alır). Repo-yerel `http.sslBackend=schannel` gerekir
+  (kurumsal sertifika).
+- **Push yalnızca kullanıcı açıkça istediğinde** yapılır; agent kendiliğinden push etmez. Force-push yok.
 - Full yeşil kanıtı yerel `./scripts/check` (full) çalıştırmasıdır (`docs/testing.md`, Two speeds kural 6); CI yok.
 
 ## Pull requests
-- Remote olmadığı için PR yok: "PR + reviewer" = bağımsız review oturumu (`/review`) + gate onayı;
+- PR akışı kullanılmıyor: "PR + reviewer" = bağımsız review oturumu (`/review`) + gate onayı;
   `.github/pull_request_template.md` kontrol listesi SHIP gate'inde uygulanır.
 - Birleştirme: gate onayından sonra dal yerelde `main`'e alınır (`git merge --ff-only`, gerekirse `--squash`).
