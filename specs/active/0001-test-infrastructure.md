@@ -1,9 +1,9 @@
 # Spec 0001 — Test altyapısı ve karakterizasyon testleri
 
-- Status: Draft
+- Status: Approved
 - Mode: lite
 - Plan: `specs/plans/0001-plan.md`
-- Self-critique: pending (öz-eleştiri boşlukları spec onayıyla birlikte onaylanacak)
+- Self-critique: done (G-1…G-7 kabul edildi — Okan Özkan, 2026-11-08)
 
 ## Intent
 LeaveManager'ın kodu sahipsiz ve hiç testi yok; izin hakkı ve bakiye gibi hassas kurallara yapılacak
@@ -48,15 +48,15 @@ none — no user interface. Mevcut ekranlar değişmez; bu iş yalnızca onları
 - Split: değerlendirildi; tek yetenek ("test edilebilirlik"), 10 kriter — tek spec önerildi.
 
 ## Acceptance criteria
-- [ ] AC-1 — `./scripts/check --fast` kural testlerini, `./scripts/check` ek olarak ekran testlerini çalıştırır; ikisi de yeşil, her profilin çalışan test sayısı çıktıda görünür ve hiçbir test iki profilin dışında kalmaz.
+- [ ] AC-1 — `./scripts/check --fast` kural testlerini, `./scripts/check` ek olarak ekran testlerini çalıştırır; ikisi de yeşil, her profilin çalışan test sayısı çıktıda görünür ve hiçbir test iki profilin dışında kalmaz: test sınıfları yalnız `*Test` (fast) veya `*HttpIT` (full) adını taşır, başka adla test sınıfı yoktur; iki profilin sınıf sayılarının toplamı test sınıfı sayısına eşittir.
 - [ ] AC-2 — Bir kural testi kasıtlı kırıldığında `./scripts/check --fast` ve `./scripts/check` kırmızı döner.
-- [ ] AC-3 — İzin hakkı (BR-1): kıdem 0 → 0, 1 → 14, 5 → 14, 6 → 20, 15 → 20, 16 → 26 gün (bugünkü değerler; 14/15 sorusu B-1).
+- [ ] AC-3 — İzin hakkı (BR-1): kıdem −1 (işe giriş gelecekte) → 0, kıdem 0 → 0, 1 → 14, 5 → 14, 6 → 20, 15 → 20, 16 → 26 gün (bugünkü değerler; 14/15 sorusu B-1).
 - [ ] AC-4 — Kıdem (BR-2, B-2): referans gün 2026-11-02 iken 2025-12-31'de işe giren 1 yıl (14 gün), 2026-01-01'de işe giren 0 yıl (0 gün) kıdemli sayılır; 2020-02-29'da işe giren 6 yıl sayılır.
 - [ ] AC-5 — Gün sayısı (BR-3, B-3): başlangıç = bitiş → 1 gün; Cuma–Pazartesi → 4 gün (hafta sonu düşülmez).
 - [ ] AC-6 — Kullanılan / kalan (BR-5, B-5): yalnız `Onaylandi` talepler kullanılandan düşülür; `Beklemede` ve `Reddedildi` düşülmez.
-- [ ] AC-7 — Bakiye kontrolü (BR-4, BR-7, B-4) uçtan uca: istenen gün < kalan → talep `Beklemede` olarak, Türkçe karakterli nedeniyle (ör. "Düğün") birlikte listede görünür; istenen gün = kalan → ERR-412 gösterilmez, listeye yönlendirilir, **talep oluşmaz**; istenen gün > kalan → ERR-412 mesajı gösterilir, talep oluşmaz.
-- [ ] AC-8 — Ekranlar uçtan uca, seed verisiyle referans günde: ana sayfa Bekleyen 4 / Onaylanan 1 / Reddedilen 3 ve her personelin hak/kullanılan/kalan satırını gösterir; talep listesi 8 talebi gün sayısı ve durumuyla gösterir; bilinmeyen adres 404 döner.
-- [ ] AC-9 — Girdi davranışı uçtan uca (BR-6, B-10): geçmiş tarihli talep kabul edilir; bitişi başlangıçtan önce olan talep negatif gün sayısıyla kabul edilir (B-11); tarih veya personel alanı geçersiz/eksik gönderildiğinde talep oluşmaz ve listeye yönlendirilir (bugünkü sessiz davranış).
+- [ ] AC-7 — Bakiye kontrolü (BR-4, BR-7, B-4) uçtan uca: istenen gün < kalan → 302 ile `/requests`'e yönlendirilir ve talep `Beklemede` olarak, Türkçe karakterli nedeniyle (ör. "Düğün") birlikte listede görünür; istenen gün = kalan → ERR-412 gösterilmez, 302 ile `/requests`'e yönlendirilir, **talep oluşmaz**; istenen gün > kalan → HTTP 200 ile ERR-412 mesajı gösterilir, talep oluşmaz.
+- [ ] AC-8 — Ekranlar uçtan uca, seed verisiyle referans günde: ana sayfa Bekleyen 4 / Onaylanan 1 / Reddedilen 3 ve personel id'sine göre hak/kullanılan/kalan satırlarını gösterir: 1 → 26/12/14, 2 → 20/0/20, 3 → 14/0/14, 4 → 20/0/20, 5 → 0/0/0; talep listesi 8 talebi gün sayısı ve durumuyla gösterir; yeni talep formu (GET `/new`) 5 personeli ve başlangıç, bitiş, neden alanlarını gösterir; `/olmayan-sayfa` 404 döner (ön ek yolları, ör. `/requests/xyz`, sabitlenmez — B-10).
+- [ ] AC-9 — Girdi davranışı uçtan uca (BR-6, B-10): geçmiş tarihli talep kabul edilir; bitişi başlangıçtan önce olan talep negatif gün sayısıyla kabul edilir (B-11); tarih veya personel alanı geçersiz/eksik gönderildiğinde — var olmayan personel id'si (ör. 99) dahil — talep oluşmaz ve listeye yönlendirilir (bugünkü sessiz davranış); neden alanı boş talep kabul edilir.
 - [ ] AC-10 — Varsayılan çalışma değişmez ve iz bırakmaz: README komutlarıyla başlatılan uygulama port 5000'de aynı seed'le açılır; testler port 5000'i kullanmaz, arka arkaya iki çalışma aynı sonucu verir; `Residue: clean (fast + full)`.
 
 ## Definition of Done
